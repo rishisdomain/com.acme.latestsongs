@@ -3,6 +3,6 @@
 
     <string name="app_name">Latest Songs</string>
     <string name="action_settings">Settings</string>
-    <string name="hello_world">Hello world!</string>
+    <string name="contentDescription">Content Description</string>
 
 </resources>

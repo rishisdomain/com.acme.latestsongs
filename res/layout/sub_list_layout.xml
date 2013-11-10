@@ -1,0 +1,35 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent" >
+
+    <ImageView
+        android:id="@+id/subicon"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentTop="true"
+        android:maxWidth="64sp"
+        android:maxHeight="64sp"
+        android:adjustViewBounds="true" 
+        android:scaleType="fitXY"
+        android:contentDescription="@string/contentDescription"
+        android:src="@drawable/ic_launcher" />
+
+    <TextView
+        android:id="@+id/subtextName"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentTop="true"
+        android:textSize="18sp"
+        android:layout_toRightOf="@+id/subicon" />
+
+    <MediaController
+        android:id="@+id/mediaController1"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_toRightOf="@+id/subicon" 
+        android:layout_below="@+id/subtextName" >
+    </MediaController>
+
+</RelativeLayout>

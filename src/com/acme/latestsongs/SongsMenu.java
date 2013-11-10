@@ -3,10 +3,14 @@ package com.acme.latestsongs;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.Serializable;
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -14,11 +18,18 @@ import java.util.StringTokenizer;
 import java.util.Vector;
 import java.util.concurrent.ExecutionException;
 
-import android.app.Activity;
+import android.app.ListActivity;
+import android.content.Intent;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.os.Environment;
+import android.view.View;
+import android.widget.AdapterView;
+import android.widget.AdapterView.OnItemClickListener;
+import android.widget.BaseAdapter;
+import android.widget.ListView;
 
-public class SongsMenu extends Activity {
+public class SongsMenu extends ListActivity {
 	
 	public static final String _TARGET_URL = "http://www.songspk.pk/";
 	
@@ -30,8 +41,49 @@ public class SongsMenu extends Activity {
 		setContentView(R.layout.activity_songs_menu);
 		
 		readFileFromSDCard();
+		
+		createMainPage();
 	}
 	
+	private void createMainPage() {
+		
+		
+		String names[] = new String[movieMap.size()];
+		final Drawable images[] = new Drawable[movieMap.size()];
+		
+		List<Data> mData = null;
+		for( int inx = 0; inx < movieMap.size(); inx++ )
+		{
+			mData = (List<Data>) movieMap.values();
+			names[inx] = mData.get( inx ).movieName;
+
+			images[inx] = Drawable.createFromPath(Environment.getExternalStorageDirectory().getPath() + "/com.apploft.songs/" + mData.get(inx).movieName + ".jpg");
+		}
+		
+		//this.setListAdapter(new ArrayAdapter<String>( this, R.layout.main_list_layout, R.id.textName, names ));
+		CustomArrayAdapter mAdapter = new CustomArrayAdapter( this, R.layout.main_list_layout, names, images, mData );
+		
+		setListAdapter( mAdapter );
+		CircularListAdapter circularAdapter = new CircularListAdapter((BaseAdapter) mAdapter);
+
+		final ListView mListView = getListView();
+		//mListView.setRotation(-90);
+		
+		mListView.setAdapter(circularAdapter);
+		mListView.setOnItemClickListener(new OnItemClickListener() {
+		      public void onItemClick(AdapterView<?> myAdapter, View myView, int pos, long mylng) {
+		    	 
+		    	  	Data mData = (Data) myView.getTag();
+		    	  	
+		    	  	Intent mIntent = new Intent( SongsMenu.this, SongPicker.class );	
+		    	  	mIntent.putExtra( "data", mData );
+		    	  			    	  
+		    	  	startActivity( mIntent );
+
+		        }      
+		  });
+	}
+
 	private void readFileFromSDCard() {
 		  String extstorage = Environment.getExternalStorageDirectory().getPath();
 		  
@@ -61,8 +113,6 @@ public class SongsMenu extends Activity {
 		  
 		  createMap(file);
 		  updateMapAndCache(file);
-		  
-		  
 	}
 
 	private void updateMapAndCache(File file) {
@@ -102,19 +152,50 @@ public class SongsMenu extends Activity {
 					
 					movieMap.put(mData.get(inx).movieName, mData.get(inx));
 					
-					try {
+					retrieveImage(mData.get(inx));
+					
+					/*try {
 						new RetreiveImage().execute( mData.get(inx) ).get();
 					} catch (InterruptedException e) {
 						e.printStackTrace();
 					} catch (ExecutionException e) {
 						e.printStackTrace();
-					}
+					}*/
 				}
 			}
 			fw.close();
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
+	}
+
+	private void retrieveImage(Data mData) {
+		int count;
+
+        try {
+        	InputStream URLcontent;
+        	byte data[] = new byte[1024];
+			URLcontent = (InputStream) new URL(mData.ImageUrl).getContent();
+			
+			FileOutputStream fos = new FileOutputStream(
+					Environment.getExternalStorageDirectory().getPath() + "/com.apploft.songs/" + mData.movieName + ".jpg");
+			
+			while ((count = URLcontent.read(data)) != -1) {
+                fos.write(data, 0, count);
+            }
+
+            fos.flush();
+
+            fos.close();
+            URLcontent.close();
+		} 
+		catch (MalformedURLException e) {
+			e.printStackTrace();
+		} catch (IOException e) {
+			e.printStackTrace();       
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
 	}
 
 	private void createMap(File file) {
@@ -184,13 +265,15 @@ public class SongsMenu extends Activity {
 				
 				fw.write(filePush);
 				
-				try {
+				retrieveImage(mData.get(inx));
+				
+				/*try {
 					new RetreiveImage().execute( mData.get(inx) ).get();
 				} catch (InterruptedException e) {
 					e.printStackTrace();
 				} catch (ExecutionException e) {
 					e.printStackTrace();
-				}
+				}*/
 			}
 			fw.close();
 		} catch (IOException e) {

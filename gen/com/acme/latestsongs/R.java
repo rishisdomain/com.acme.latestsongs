@@ -24,10 +24,17 @@ public final class R {
         public static final int ic_launcher=0x7f020000;
     }
     public static final class id {
-        public static final int action_settings=0x7f080000;
+        public static final int action_settings=0x7f080005;
+        public static final int icon=0x7f080000;
+        public static final int mediaController1=0x7f080004;
+        public static final int subicon=0x7f080002;
+        public static final int subtextName=0x7f080003;
+        public static final int textName=0x7f080001;
     }
     public static final class layout {
         public static final int activity_songs_menu=0x7f030000;
+        public static final int main_list_layout=0x7f030001;
+        public static final int sub_list_layout=0x7f030002;
     }
     public static final class menu {
         public static final int songs_menu=0x7f070000;
@@ -35,7 +42,7 @@ public final class R {
     public static final class string {
         public static final int action_settings=0x7f050001;
         public static final int app_name=0x7f050000;
-        public static final int hello_world=0x7f050002;
+        public static final int contentDescription=0x7f050002;
     }
     public static final class style {
         /** 
