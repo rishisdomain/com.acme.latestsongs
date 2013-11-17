@@ -3,17 +3,15 @@ package com.acme.latestsongs;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.io.InputStream;
 import java.io.Serializable;
-import java.net.MalformedURLException;
-import java.net.URL;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
+import java.util.Set;
 import java.util.StringTokenizer;
 import java.util.Vector;
 import java.util.concurrent.ExecutionException;
@@ -51,13 +49,18 @@ public class SongsMenu extends ListActivity {
 		String names[] = new String[movieMap.size()];
 		final Drawable images[] = new Drawable[movieMap.size()];
 		
-		List<Data> mData = null;
-		for( int inx = 0; inx < movieMap.size(); inx++ )
-		{
-			mData = (List<Data>) movieMap.values();
-			names[inx] = mData.get( inx ).movieName;
+		List<Data> mData = new ArrayList<Data>();
+		Set<String> movieNms = movieMap.keySet();
+		Iterator<String> iter = movieNms.iterator();
+		int inx = 0;
+		while (iter.hasNext()) {
+			Data data = movieMap.get(iter.next());
+			names[inx] = data.movieName;
+			
+			mData.add(data);
 
-			images[inx] = Drawable.createFromPath(Environment.getExternalStorageDirectory().getPath() + "/com.apploft.songs/" + mData.get(inx).movieName + ".jpg");
+			images[inx] = Drawable.createFromPath(Environment.getExternalStorageDirectory().getPath() + "/com.apploft.songs/" + data.movieName + ".png");
+			inx++;
 		}
 		
 		//this.setListAdapter(new ArrayAdapter<String>( this, R.layout.main_list_layout, R.id.textName, names ));
@@ -152,15 +155,15 @@ public class SongsMenu extends ListActivity {
 					
 					movieMap.put(mData.get(inx).movieName, mData.get(inx));
 					
-					retrieveImage(mData.get(inx));
+					//retrieveImage(mData.get(inx));
 					
-					/*try {
+					try {
 						new RetreiveImage().execute( mData.get(inx) ).get();
 					} catch (InterruptedException e) {
 						e.printStackTrace();
 					} catch (ExecutionException e) {
 						e.printStackTrace();
-					}*/
+					}
 				}
 			}
 			fw.close();
@@ -169,7 +172,7 @@ public class SongsMenu extends ListActivity {
 		}
 	}
 
-	private void retrieveImage(Data mData) {
+	/*private void retrieveImage(Data mData) {
 		int count;
 
         try {
@@ -178,7 +181,7 @@ public class SongsMenu extends ListActivity {
 			URLcontent = (InputStream) new URL(mData.ImageUrl).getContent();
 			
 			FileOutputStream fos = new FileOutputStream(
-					Environment.getExternalStorageDirectory().getPath() + "/com.apploft.songs/" + mData.movieName + ".jpg");
+					Environment.getExternalStorageDirectory().getPath() + "/com.apploft.songs/" + mData.movieName + ".png");
 			
 			while ((count = URLcontent.read(data)) != -1) {
                 fos.write(data, 0, count);
@@ -196,7 +199,7 @@ public class SongsMenu extends ListActivity {
         } catch (Exception e) {
             e.printStackTrace();
         }
-	}
+	}*/
 
 	private void createMap(File file) {
 		movieMap = new HashMap<String, Data>();
@@ -227,8 +230,8 @@ public class SongsMenu extends ListActivity {
 		StringTokenizer mTokenizer = new StringTokenizer( readline, "||");
 		
 		mData.movieName = mTokenizer.nextToken();
-		mData.movieUrl = mTokenizer.nextToken();
 		mData.ImageUrl = mTokenizer.nextToken();
+		mData.movieUrl = mTokenizer.nextToken();
 		
 		return mData;
 	}
@@ -265,15 +268,15 @@ public class SongsMenu extends ListActivity {
 				
 				fw.write(filePush);
 				
-				retrieveImage(mData.get(inx));
+				//retrieveImage(mData.get(inx));
 				
-				/*try {
+				try {
 					new RetreiveImage().execute( mData.get(inx) ).get();
 				} catch (InterruptedException e) {
 					e.printStackTrace();
 				} catch (ExecutionException e) {
 					e.printStackTrace();
-				}*/
+				}
 			}
 			fw.close();
 		} catch (IOException e) {

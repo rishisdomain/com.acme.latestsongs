@@ -44,7 +44,7 @@ public class SongPicker extends ListActivity{
 	    this.setTitle( mData.movieName );
 	    String url = mData.movieUrl;
 	    
-	    image = Drawable.createFromPath(Environment.getExternalStorageDirectory().getPath() + "/com.apploft.songs/" + mData.movieName + ".jpg");
+	    image = Drawable.createFromPath(Environment.getExternalStorageDirectory().getPath() + "/com.apploft.songs/" + mData.movieName + ".png");
 		
 	    final HashMap<String, String> mMovieData = new HashMap<String, String>();
 	    
@@ -194,10 +194,10 @@ public class SongPicker extends ListActivity{
 		
 		            byte data[] = new byte[1024];
 		
-		            long total = 0;
+		            //long total = 0;
 		
 		            while ((count = input.read(data)) != -1) {
-		                total += count;
+		                //total += count;
 
 		                // writing data to file
 		                output.write(data, 0, count);
